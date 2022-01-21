@@ -129,10 +129,11 @@ public class RangerSystemAccessControlTest {
   public void testTableOperations()
   {
     Set<SchemaTableName> aliceTables = ImmutableSet.of(new SchemaTableName("schema", "table"));
+    Map<String, Object> properties = new HashMap<>();
     assertEquals(accessControlManager.filterTables(context(alice), aliceCatalog, aliceTables), aliceTables);
     assertEquals(accessControlManager.filterTables(context(bob), "alice-catalog", aliceTables), ImmutableSet.of());
 
-    accessControlManager.checkCanCreateTable(context(alice), aliceTable);
+    accessControlManager.checkCanCreateTable(context(alice), aliceTable, properties);
     accessControlManager.checkCanDropTable(context(alice), aliceTable);
     accessControlManager.checkCanSelectFromColumns(context(alice), aliceTable, ImmutableSet.of());
     accessControlManager.checkCanInsertIntoTable(context(alice), aliceTable);
@@ -141,7 +142,7 @@ public class RangerSystemAccessControlTest {
 
 
     try {
-      accessControlManager.checkCanCreateTable(context(bob), aliceTable);
+      accessControlManager.checkCanCreateTable(context(bob), aliceTable, properties);
     } catch (AccessDeniedException expected) {
     }
   }
