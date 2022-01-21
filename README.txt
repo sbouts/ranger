@@ -36,21 +36,29 @@ https://issues.apache.org/jira/browse/RANGER-3182
 
 2. On the root folder, please execute the following Maven command:
    
-   # FOR OPENJDK11 AND MAVEN 3.6.3
+   # FOR OPENJDK11 AND MAVEN 3.6.3 AND ASSEMBLY 2.6
    $ export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-   $ mvn clean compile package assembly:assembly install -pl '!hive-agent'
+   $ mvn clean compile package install assembly:assembly -pl '!hive-agent'
+
+   # FOR OPENJDK11 AND MAVEN 3.8.4 AND ASSEMBLY 3.3.0
+   $ sudo wget -O apache-maven-3.8.4-bin.zip /opt/ https://dlcdn.apache.org/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.zip
+   $ sudo unzip apache-maven-3.8.4-bin.zip
+   $ sudo chown -R ${USER}:${USER} /opt/apache-maven-3.8.4-bin.zip
+   $ vi /opt/apache-maven-3.8.4/conf/settings.xml # and remove the 'maven-default-http-blocker' section of mirrors
+
+   $ # update 'assembly.plugin.version' in pom.xml to 3.3.0
+
+   $ export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+   $ export M2_HOME=/opt/apache-maven-3.8.4
+   $ export MAVEN_HOME=/opt/apache-maven-3.8.4
+   $ export PATH=${PATH}:${MAVEN_HOME}/bin
+   $ /opt/apache-maven-3.8.4/bin/mvn clean compile package install assembly:single -pl '!hive-agent' -C
 
 3. After the above build command execution, you should see the following TAR files in the target folder:
 
    ranger-<version>-trino-plugin.tar.gz
 
 along with other plugins.
-
-NOTE: When encountering errors like:
-
-   [ERROR] Failed to execute goal org.apache.maven.plugins:maven-assembly-plugin:2.6:single (default) on project ranger-distro: Failed to create assembly: Error creating assembly archive schema-registry-plugin: IOException when zipping rMETA-INF/maven/org.apache.ranger/ranger-distro/pom.properties: ZipFile invalid LOC header (bad signature) -> [Help 1]
-
-Re-run the mvn command with the '-X' switch and it will probably work..?
 
 
 Build Process
