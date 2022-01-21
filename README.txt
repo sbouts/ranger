@@ -36,7 +36,7 @@ https://issues.apache.org/jira/browse/RANGER-3182
 
 2. On the root folder, please execute the following Maven command:
    
-   # FOR OPENJDK11
+   # FOR OPENJDK11 AND MAVEN 3.6.3
    $ export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
    $ mvn clean compile package assembly:assembly install -pl '!hive-agent'
 
